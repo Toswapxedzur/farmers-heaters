@@ -1,0 +1,20 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.minecart.farmers_heaters.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "HeatableBlockEntityMixin",
+    "CookingPotBlockEntityMixin",
+    "CookingPotMenuMixin",
+    "CookingPotScreenMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}
