@@ -1,0 +1,30 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mod_loaded",
+      "modid": "mynethersdelight"
+    }
+  ],
+  "values": [
+    "mynethersdelight:sausage_and_potatoes",
+    "mynethersdelight:fried_hoglin_chop",
+    "mynethersdelight:roast_stuffed_hoglin",
+    "mynethersdelight:deviled_egg",
+    "mynethersdelight:scotch_eggs",
+    "mynethersdelight:egg_soup",
+    "mynethersdelight:strider_with_grilled_fungus",
+    "mynethersdelight:strider_stew",
+    "mynethersdelight:crimson_stroganoff",
+    "mynethersdelight:twisted_ghasta",
+    "mynethersdelight:spicy_noodle_soup",
+    "mynethersdelight:fries_ghasta",
+    "mynethersdelight:giant_takoyaki",
+    "mynethersdelight:chilidog",
+    "mynethersdelight:spicy_hoglin_stew",
+    "mynethersdelight:hot_wings",
+    "mynethersdelight:spicy_curry",
+    "mynethersdelight:rock_soup",
+    "mynethersdelight:burnt_roll",
+    "mynethersdelight:hot_cream"
+  ]
+}
