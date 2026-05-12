@@ -1,7 +1,7 @@
 {
-  "neoforge:conditions": [
+  "forge:conditions": [
     {
-      "type": "mod_loaded",
+      "type": "forge:mod_loaded",
       "modid": "mynethersdelight"
     }
   ],

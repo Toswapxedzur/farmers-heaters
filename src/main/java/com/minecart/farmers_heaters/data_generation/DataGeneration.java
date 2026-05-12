@@ -24,6 +24,8 @@ public class DataGeneration {
 
         GenBlockTag blockTag = new GenBlockTag(output, lookUp, fileHelper);
         dataGenerator.addProvider(event.includeServer(), blockTag);
+        dataGenerator.addProvider(event.includeServer(),
+                new GenItemTag(output, lookUp, blockTag.contentsGetter(), fileHelper));
 
         dataGenerator.addProvider(event.includeClient(), new GenItemModel(output, fileHelper));
     }

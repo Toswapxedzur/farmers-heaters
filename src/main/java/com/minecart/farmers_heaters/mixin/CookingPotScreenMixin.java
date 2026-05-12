@@ -19,7 +19,7 @@ import vectorwing.farmersdelight.client.gui.CookingPotScreen;
 import vectorwing.farmersdelight.common.block.entity.container.CookingPotMenu;
 import vectorwing.farmersdelight.common.utility.TextUtils;
 
-import java.awt.Rectangle;
+import java.awt.*;
 
 @Debug(export = true)
 @Mixin(value = CookingPotScreen.class, remap = false)
@@ -33,19 +33,20 @@ public abstract class CookingPotScreenMixin extends AbstractContainerScreen<Cook
         super(menu, playerInventory, title);
     }
 
-    // 1.20.1: Swapped to @Inject. remap = false because this is a Farmer's Delight specific method.
+    // 1.20.1: @Inject + cancel instead of @Overwrite. remap = false because this is a Farmer's Delight method.
     @Inject(method = "renderHeatIndicatorTooltip", at = @At("HEAD"), cancellable = true, remap = false)
     private void farmers_heaters$renderHeatIndicatorTooltip(GuiGraphics gui, int mouseX, int mouseY, CallbackInfo ci) {
-        if (this.isHovering(HEAT_ICON.x, HEAT_ICON.y, HEAT_ICON.width, HEAT_ICON.height, (double)mouseX, (double)mouseY)) {
+        if (this.isHovering(HEAT_ICON.x, HEAT_ICON.y, HEAT_ICON.width, HEAT_ICON.height, mouseX, mouseY)) {
             String key = "container.cooking_pot." +
-                    ( ((ISuperWithoutLevelHeatable) this.menu).isSuperHeated() ? "super_heated" : (this.menu.isHeated() ? "heated" : "not_heated") );
+                    (((ISuperWithoutLevelHeatable) this.menu).isSuperHeated() ? "super_heated"
+                            : (this.menu.isHeated() ? "heated" : "not_heated"));
 
             gui.renderTooltip(this.font, TextUtils.getTranslation(key), mouseX, mouseY);
-            ci.cancel(); // Stops the original method from rendering a duplicate tooltip
+            ci.cancel();
         }
     }
 
-    // 1.20.1: Swapped to @Inject. remap = true (default) because renderBg is a Vanilla Minecraft method.
+    // 1.20.1: @Inject + cancel instead of @Overwrite. renderBg is a vanilla MC method (remap = true).
     @Inject(method = "renderBg", at = @At("HEAD"), cancellable = true)
     protected void farmers_heaters$renderBg(GuiGraphics gui, float partialTicks, int mouseX, int mouseY, CallbackInfo ci) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -61,6 +62,6 @@ public abstract class CookingPotScreenMixin extends AbstractContainerScreen<Cook
             int l = this.menu.getCookProgressionScaled();
             gui.blit(BACKGROUND_TEXTURE, this.leftPos + PROGRESS_ARROW.x, this.topPos + PROGRESS_ARROW.y, 176, 15, l + 1, PROGRESS_ARROW.height);
         }
-        ci.cancel(); // Stops the original method from drawing its background over ours
+        ci.cancel();
     }
 }

@@ -7,7 +7,6 @@ import com.minecart.farmers_heaters.mixin_interface.ISuperWithoutLevelHeatable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.RecipeHolder;
@@ -56,6 +55,7 @@ public abstract class CookingPotBlockEntityMixin extends SyncedBlockEntity imple
         super(tileEntityTypeIn, pos, state);
     }
 
+    @Unique
     private int soulCookTime;
 
     // 1.20.1: NBT loading method is usually called "load" (or loadAdditional without registries)
@@ -79,12 +79,11 @@ public abstract class CookingPotBlockEntityMixin extends SyncedBlockEntity imple
     @Unique
     public void cook(Level level, BlockPos pos, BlockState state){
         boolean isHeated = isHeated(level, pos);
-        boolean isSuperHeated = ((ISuperHeatable)(Object)this).isSuperHeated(level, pos);
+        boolean isSuperHeated = ((ISuperWithoutLevelHeatable)(Object)this).isSuperHeated();
         boolean cooked = false;
         boolean didInventoryChange = false;
 
         if (hasInput()) {
-            // 1.20.1: No RecipeHolder
             Optional<CookingPotRecipe> recipeOptional = getMatchingRecipe(new RecipeWrapper(inventory));
             if (recipeOptional.isPresent()) {
                 CookingPotRecipe recipe = recipeOptional.get();
@@ -201,7 +200,8 @@ public abstract class CookingPotBlockEntityMixin extends SyncedBlockEntity imple
         };
     }
 
+    @Unique
     public boolean isSuperHeated() {
-        return this.level != null && ((ISuperHeatable) this).isSuperHeated(this.level, this.worldPosition);
+        return this.level == null ? false : ((ISuperHeatable) this).isSuperHeated(this.level, this.worldPosition);
     }
 }

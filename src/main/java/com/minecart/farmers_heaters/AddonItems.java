@@ -6,12 +6,16 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import vectorwing.farmersdelight.common.item.KnifeItem;
+import vectorwing.farmersdelight.common.registry.ModItems;
 
 public class AddonItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, FarmersHeaters.MODID);
 
-    // 1.20.1: Returns a RegistryObject instead of a raw Supplier
     public static final RegistryObject<Item> STURDY_KNIFE = ITEMS.register("sturdy_knife",
-            () -> new KnifeItem(AllBlockItem.STURDY, 1, 1, new Item.Properties().fireResistant())
+            () -> new KnifeItem(AllBlockItem.STURDY, 0.5F, -2.0F, new Item.Properties().fireResistant())
     );
+
+    static {
+        ModItems.CREATIVE_TAB_ITEMS.add(STURDY_KNIFE);
+    }
 }
