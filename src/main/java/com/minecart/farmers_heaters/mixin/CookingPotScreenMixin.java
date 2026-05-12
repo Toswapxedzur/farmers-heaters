@@ -1,5 +1,6 @@
 package com.minecart.farmers_heaters.mixin;
 
+import com.minecart.farmers_heaters.FarmersHeaters;
 import com.minecart.farmers_heaters.mixin_interface.ISuperWithoutLevelHeatable;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,6 +30,15 @@ public abstract class CookingPotScreenMixin extends AbstractContainerScreen<Cook
     @Shadow @Final private static ResourceLocation BACKGROUND_TEXTURE;
     @Shadow @Final private static Rectangle PROGRESS_ARROW;
 
+    // Dedicated texture for the soul-flame heat overlay. Lives in our own namespace because
+    // Forge 1.20.1 stacks mod resource packs in mod-id order, and `farmersdelight` sorts after
+    // `farmers_heaters` (alphabetically '_' < 'd'). That means our same-path override of
+    // `farmersdelight:textures/gui/cooking_pot.png` gets clobbered by FD's stock texture, so
+    // blitting the (193,0) region from BACKGROUND_TEXTURE would yield FD pixels (no soul flame).
+    // Putting the asset in our own namespace sidesteps the conflict entirely.
+    private static final ResourceLocation SUPER_HEATED_BACKGROUND_TEXTURE =
+            new ResourceLocation(FarmersHeaters.MODID, "textures/gui/cooking_pot.png");
+
     public CookingPotScreenMixin(CookingPotMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
     }
@@ -54,7 +64,7 @@ public abstract class CookingPotScreenMixin extends AbstractContainerScreen<Cook
             gui.blit(BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 
             if (((ISuperWithoutLevelHeatable) this.menu).isSuperHeated()) {
-                gui.blit(BACKGROUND_TEXTURE, this.leftPos + HEAT_ICON.x, this.topPos + HEAT_ICON.y, 193, 0, HEAT_ICON.width, HEAT_ICON.height);
+                gui.blit(SUPER_HEATED_BACKGROUND_TEXTURE, this.leftPos + HEAT_ICON.x, this.topPos + HEAT_ICON.y, 193, 0, HEAT_ICON.width, HEAT_ICON.height);
             } else if (this.menu.isHeated()) {
                 gui.blit(BACKGROUND_TEXTURE, this.leftPos + HEAT_ICON.x, this.topPos + HEAT_ICON.y, 176, 0, HEAT_ICON.width, HEAT_ICON.height);
             }
