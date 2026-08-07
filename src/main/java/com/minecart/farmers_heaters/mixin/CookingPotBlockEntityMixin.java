@@ -29,6 +29,11 @@ import vectorwing.farmersdelight.common.crafting.CookingPotRecipe;
 import java.util.Map;
 import java.util.Optional;
 
+// Class-level remap = false: this mixin targets a Farmer's Delight class, and most of its
+// shadowed members / injected methods are FD-specific (literal names in both dev and prod).
+// IMPORTANT: any @Inject targeting a Minecraft-inherited method (e.g. load, saveAdditional)
+// MUST set remap = true individually to override this class-level default — otherwise mixin
+// looks for the literal MC name in production where it's been SRG-renamed (m_142466_, etc.).
 @Debug(export = true)
 @Mixin(value = CookingPotBlockEntity.class, remap = false)
 public abstract class CookingPotBlockEntityMixin extends SyncedBlockEntity implements HeatableBlockEntity, Nameable, RecipeHolder, ICookingPotBlockEntity, ISuperWithoutLevelHeatable {
@@ -58,14 +63,15 @@ public abstract class CookingPotBlockEntityMixin extends SyncedBlockEntity imple
     @Unique
     private int soulCookTime;
 
-    // 1.20.1: NBT loading method is usually called "load" (or loadAdditional without registries)
-    @Inject(method = "load", at = @At(value = "TAIL"))
+    // load() and saveAdditional() are inherited Minecraft methods. FD's override gets the
+    // parent's SRG name (m_142466_ / m_183515_) in production, so remap = true is REQUIRED
+    // to override the class-level remap = false above.
+    @Inject(method = "load", at = @At(value = "TAIL"), remap = true)
     public void load(CompoundTag compound, CallbackInfo info) {
         this.soulCookTime = compound.getInt("SoulCookTime");
     }
 
-    // 1.20.1: NBT saving method
-    @Inject(method = "saveAdditional", at = @At(value = "TAIL"))
+    @Inject(method = "saveAdditional", at = @At(value = "TAIL"), remap = true)
     public void saveAdditional(CompoundTag compound, CallbackInfo info) {
         compound.putInt("SoulCookTime", this.soulCookTime);
     }
