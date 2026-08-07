@@ -56,8 +56,9 @@ public abstract class CookingPotScreenMixin extends AbstractContainerScreen<Cook
         }
     }
 
-    // 1.20.1: @Inject + cancel instead of @Overwrite. renderBg is a vanilla MC method (remap = true).
-    @Inject(method = "renderBg", at = @At("HEAD"), cancellable = true)
+    // renderBg is inherited from AbstractContainerScreen (vanilla MC, SRG m_7286_), so
+    // remap = true is REQUIRED to override the class-level remap = false above.
+    @Inject(method = "renderBg", at = @At("HEAD"), cancellable = true, remap = true)
     protected void farmers_heaters$renderBg(GuiGraphics gui, float partialTicks, int mouseX, int mouseY, CallbackInfo ci) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.minecraft != null) {
